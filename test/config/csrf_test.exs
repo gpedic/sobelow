@@ -30,6 +30,15 @@ defmodule SobelowTest.Config.CSRFTest do
            |> Enum.any?(&Config.vuln_pipeline?(&1, :csrf))
   end
 
+  test "ignores variables and calls named pipeline that are not pipeline definitions" do
+    router = "./test/fixtures/csrf/router_with_pipeline_lookalikes.ex"
+
+    assert [{:pipeline, _, [:browser, _]}] = Config.get_pipelines(router)
+
+    assert Config.get_pipelines(router)
+           |> Enum.any?(&Config.vuln_pipeline?(&1, :csrf))
+  end
+
   test "honors sobelow_skip on vulnerable pipelines" do
     Application.put_env(:sobelow, :skip, true)
     on_exit(fn -> Application.delete_env(:sobelow, :skip) end)

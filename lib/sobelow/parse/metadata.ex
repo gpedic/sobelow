@@ -168,9 +168,15 @@ defmodule Sobelow.Parse.Metadata do
 
     ast
     |> Calls.get_funs_of_type(:pipeline)
+    |> Enum.filter(&pipeline_definition?/1)
     |> Enum.reverse()
     |> Enum.map(&{&1, Map.get(skips, &1, [])})
   end
+
+  # `get_funs_of_type/2` matches by name, so a variable or call named `pipeline`
+  # also arrives here. Only `pipeline :name do ... end` is a definition.
+  defp pipeline_definition?({:pipeline, _, [_name, [do: _block]]}), do: true
+  defp pipeline_definition?(_), do: false
 
   defp pipeline_skip_attrs(ast) do
     ast

@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+  * Bug fixes
+    * Router scans no longer crash with a `FunctionClauseError` in
+      `Sobelow.Config.vuln_pipeline?/2` when the router contains a variable or
+      call named `pipeline` that is not a `pipeline :name do ... end`
+      definition. Existing finding locations and skip fingerprints are
+      unchanged.
+
 ## v0.17.0
 
   * Enhancements
